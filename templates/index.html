@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home | XAI Procrastination Detector{% endblock %}
+
+{% block extra_css %}
+<style>
+    .glass-hero {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(76, 201, 240, 0.2);
+        color: #4cc9f0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.5rem;
+        transition: 0.3s transform ease;
+    }
+
+    .glass-hero:hover .feature-icon {
+        transform: translateY(-5px);
+    }
+
+    .text-gradient {
+        background: linear-gradient(90deg, #fff, #4cc9f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="glass-hero text-center text-white">
+            <h1 class="display-3 fw-bold mb-3 text-gradient">Smart Productivity Monitoring</h1>
+            <p class="lead mb-5 px-md-5 opacity-90">
+                Harnessing **Explainable Artificial Intelligence** to detect procrastination patterns in real-time. 
+                We don't just track apps; we explain the <em>why</em> behind your focus.
+            </p>
+
+            <div class="row g-4 mb-5 text-start">
+                <div class="col-md-4">
+                    <div class="text-center p-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h5 class="fw-bold">Real-time Analysis</h5>
+                        <p class="small opacity-75">Instant monitoring of active applications and workspace transitions.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h5 class="fw-bold">XAI Insights</h5>
+                        <p class="small opacity-75">Transparency in detection—understand the logic used to flag procrastination.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h5 class="fw-bold">Smart Warnings</h5>
+                        <p class="small opacity-75">Gentle nudges and explainable alerts to get you back on track.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'register' %}" class="btn btn-info btn-lg px-5 rounded-pill fw-bold shadow">
+                    Get Started <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+                <a href="{% url 'loginn' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill">
+                    Member Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

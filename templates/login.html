@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | XAI Procrastination Detector{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        color: #fff;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff !important;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #4cc9f0;
+        box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .login-btn {
+        background: linear-gradient(135deg, #4361ee, #4cc9f0);
+        border: none;
+        transition: transform 0.2s;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
+    }
+
+    .input-group-text {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #4cc9f0;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .form-control {
+        border-radius: 0 10px 10px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="login-card p-5">
+            <div class="text-center mb-4">
+                <div class="feature-icon mb-3 mx-auto" style="width: 60px; height: 60px; background: rgba(76, 201, 240, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-lock text-info fs-4"></i>
+                </div>
+                <h2 class="fw-bold">Member Login</h2>
+                <p class="small text-white-50">Secure access to your XAI Dashboard</p>
+            </div>
+
+            <form action="{% url 'user_login' %}" method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn login-btn text-white py-2 rounded-pill fw-bold shadow">
+                        <i class="fas fa-sign-in-alt me-2"></i> Access System
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="small mb-0 opacity-75">Don't have an account?</p>
+                    <a href="{% url 'register' %}" class="text-info text-decoration-none small fw-bold">Create an account here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register | XAI Procrastination Detector{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        color: #fff;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff !important;
+        border-radius: 0 12px 12px 0;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #4cc9f0;
+        box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.2);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+    }
+
+    .input-group-text {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #4cc9f0;
+        border-radius: 12px 0 0 12px;
+        min-width: 45px;
+        justify-content: center;
+    }
+
+    .reg-btn {
+        background: linear-gradient(135deg, #4361ee, #4cc9f0);
+        border: none;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .reg-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(76, 201, 240, 0.4);
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="register-card p-4 p-md-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-2">Create XAI Account</h2>
+                <p class="text-white-50">Join the next generation of productivity monitoring</p>
+                <hr class="w-25 mx-auto border-info opacity-50">
+            </div>
+
+            <form action="{% url 'user_registration' %}" method="post">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">First Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            <input type="text" name="first_name" class="form-control" placeholder="John" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">Last Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                            <input type="text" name="last_name" class="form-control" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-at"></i></span>
+                            <input type="text" name="username" class="form-control" placeholder="johndoe123" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="name@company.com" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1 opacity-75">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
+                            <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn reg-btn text-white px-5 py-3 rounded-pill fw-bold shadow-lg w-100 w-md-auto">
+                        <i class="fas fa-user-plus me-2"></i> Initialize Account
+                    </button>
+                    <p class="mt-4 small opacity-75">
+                        Already have an account? 
+                        <a href="{% url 'loginn' %}" class="text-info text-decoration-none fw-bold">Sign In</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

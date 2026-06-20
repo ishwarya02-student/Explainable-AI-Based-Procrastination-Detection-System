@@ -1,0 +1,216 @@
+{% extends 'user/userbase.html' %}
+{% block title %}XAI | AI Procrastination Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* RESET: Ensure body/container doesn't have conflicting whites */
+    .container-fluid { color: #ffffff; }
+
+    .glass-card {
+        background: rgba(15, 23, 42, 0.6); /* Deep dark background for contrast */
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        color: #ffffff !important; /* Force all text to white */
+    }
+
+    .verdict-header {
+        background: linear-gradient(90deg, #4361ee, #4cc9f0);
+        border-radius: 16px 16px 0 0;
+        padding: 12px;
+    }
+
+    /* Table Fixes */
+    .table-dark-custom { color: #ffffff; }
+    .table-dark-custom thead th { 
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        color: #4cc9f0; 
+        font-size: 0.8rem;
+    }
+    .table-dark-custom td { border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+    /* Badge visibility */
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .bg-success-soft { background: #10b981; color: #ffffff; }
+    .bg-danger-soft { background: #ef4444; color: #ffffff; }
+    
+    .chart-box { position: relative; height: 220px; width: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row g-4">
+        
+        <div class="col-lg-4">
+            <div class="card glass-card border-0 shadow-lg mb-4">
+                <div class="card-header verdict-header border-0">
+                    <h5 class="mb-0 text-white"><i class="fas fa-brain me-2"></i>AI Verdict</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h1 class="display-3 fw-bold mb-0 
+                        {% if report.procrastination_score > 70 %}text-danger
+                        {% elif report.procrastination_score > 30 %}text-warning
+                        {% else %}text-success{% endif %}">
+                        {{ report.procrastination_score|floatformat:0 }}%
+                    </h1>
+                    <p class="text-white-50 small">Procrastination Risk</p>
+                    
+                    <div class="mt-3 p-3 text-start rounded" style="background: rgba(0,0,0,0.3);">
+                        <small class="text-info fw-bold">XAI INSIGHT:</small>
+                        <p class="text-white small mb-0 mt-1">"{{ report.xai_explanation }}"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glass-card border-0">
+                <div class="card-body">
+                    <h6 class="text-white-50 small mb-4">PRODUCTIVITY MIX</h6>
+                    <div class="chart-box">
+                        <canvas id="prodDoughnut"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card glass-card border-0">
+                        <div class="card-body">
+                            <h6 class="text-white-50 small mb-3">FOCUS TREND</h6>
+                            <div class="chart-box">
+                                <canvas id="activityLine"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card glass-card border-0">
+                        <div class="card-body">
+                            <h6 class="text-white-50 small mb-3">TOP APPS (SEC)</h6>
+                            <div class="chart-box">
+                                <canvas id="appBar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glass-card border-0">
+                <div class="card-header bg-transparent border-bottom border-secondary">
+                    <h6 class="mb-0 text-white py-2">Live Activity Feed</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark-custom align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Application</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th class="pe-4 text-end">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for act in activities %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-black">{{ act.app_name }}</div>
+                                    <div class="text-black-50 x-small" style="font-size: 0.7rem;">{{ act.window_title|truncatechars:50 }}</div>
+                                </td>
+                                <td class="text-black">{{ act.duration_seconds }}s</td>
+                                <td>
+                                    {% if act.is_productive %}
+                                        <span class="status-badge bg-success-soft">Focused</span>
+                                    {% else %}
+                                        <span class="status-badge bg-danger-soft">Distracted</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pe-4 text-end text-black-50 small">{{ act.timestamp|time:"H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center py-5 text-white-50">Waiting for data pings...</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Global Chart Defaults for Dark Mode
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+
+    // 1. Doughnut
+    new Chart(document.getElementById('prodDoughnut'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Focused', 'Distracted'],
+            datasets: [{
+                data: [{{ prod_count }}, {{ dist_count }}],
+                backgroundColor: ['#10b981', '#ef4444'],
+                borderWidth: 0
+            }]
+        },
+        options: { 
+            maintainAspectRatio: false, 
+            cutout: '80%',
+            plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
+        }
+    });
+
+    // 2. Line Chart
+    new Chart(document.getElementById('activityLine'), {
+        type: 'line',
+        data: {
+            labels: [{% for act in activities|slice:":8" %}'{{ act.timestamp|time:"H:i" }}',{% endfor %}],
+            datasets: [{
+                label: 'Intensity',
+                data: [{% for act in activities|slice:":8" %}{{ act.duration_seconds }},{% endfor %}],
+                borderColor: '#4cc9f0',
+                fill: true,
+                backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: { 
+            maintainAspectRatio: false,
+            scales: { 
+                y: { grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 3. Bar Chart
+    new Chart(document.getElementById('appBar'), {
+        type: 'bar',
+        data: {
+            labels: [{% for act in activities|slice:":5" %}'{{ act.app_name }}',{% endfor %}],
+            datasets: [{
+                data: [{% for act in activities|slice:":5" %}{{ act.duration_seconds }},{% endfor %}],
+                backgroundColor: '#4361ee',
+                borderRadius: 4
+            }]
+        },
+        options: { 
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } } }
+        }
+    });
+});
+</script>
+{% endblock %}

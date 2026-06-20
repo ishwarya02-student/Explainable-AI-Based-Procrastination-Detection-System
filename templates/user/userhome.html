@@ -1,0 +1,131 @@
+{% extends 'user/userbase.html' %}
+{% block title %}XAI | User Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dark Glass Card Styling */
+    .glass-profile-card {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .profile-header-gradient {
+        background: linear-gradient(90deg, #4361ee, #4cc9f0);
+        padding: 30px;
+        text-align: center;
+    }
+
+    .profile-icon-wrapper {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .info-label {
+        color: #4cc9f0; /* Cyan accent for titles */
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    .status-pill {
+        padding: 6px 15px;
+        border-radius: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="user-home" class="py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-10">
+            
+            <div class="card glass-profile-card shadow-lg border-0">
+                <div class="profile-header-gradient">
+                    <div class="profile-icon-wrapper shadow">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="text-black mb-0 fw-bold">{{ user.username }}</h3>
+                    <p class="text-black-50 small mb-0">System User Identity</p>
+                </div>
+
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <div class="info-label fw-bold">Full Name</div>
+                                <div class="info-value text-black">
+                                    {% if user.first_name or user.last_name %}
+                                        {{ user.first_name }}{{ user.last_name }}
+                                    {% else %}
+                                        <span class="text-black-50 fst-italic">Not Provided</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="info-label fw-bold">Email Address</div>
+                                <div class="info-value text-black">{{ user.email }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <div class="info-label fw-bold">Account Status</div>
+                                <div class="info-value mt-2">
+                                    {% if user.is_active %}
+                                        <span class="status-pill bg-success shadow-sm">
+                                            <i class="fas fa-check-circle me-1"></i> Verified Active
+                                        </span>
+                                    {% else %}
+                                        <span class="status-pill bg-danger shadow-sm">
+                                            <i class="fas fa-times-circle me-1"></i> Inactive
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="info-label fw-bold">Last Login Activity</div>
+                                <div class="info-value text-black-50 small">
+                                    {{ user.last_login|date:"M d, Y | H:i" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary opacity-25">
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-info rounded-pill px-4 btn-sm">
+                            <i class="fas fa-edit me-2"></i>Edit Profile Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
