@@ -1,0 +1,7 @@
+pip install pygetwindow requests
+
+
+we have to run 2 servers:
+
+Terminal 1: python manage.py runserver
+Terminal 2: python tracker.py
